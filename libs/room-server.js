@@ -36,7 +36,7 @@ function generateHostRoomCode() {
 function assignName(socket, guestNumber, nicknames, namesUsed, room, username) {
     var name = username ? username : 'Guest' + guestNumber;
     nicknames[room] = {[socket.id]: name};
-    
+
     socket.emit('nameResult', {
         success: true,
         name: name
@@ -106,10 +106,10 @@ function handleNameChangeAttempts(socket, nicknames, namesUsed, room) {
     });
 }
 
-function handleClientDisconnection(socket) {
+function handleClientDisconnection(socket, nicknames, namesUsed, room) {
     socket.on('disconnect', function() {
-    var nameIndex = namesUsed.indexOf(nicknames[socket.id]);
-    delete namesUsed[nameIndex];
-    delete nicknames[socket.id];
+        var nameIndex = namesUsed[room].indexOf(nicknames[room][socket.id]);
+        delete namesUsed[room][nameIndex];
+        delete nicknames[room][socket.id];
     });
 }
