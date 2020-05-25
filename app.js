@@ -1,17 +1,27 @@
 const express = require('express');
 const app = express();
-// const roomServer = require('./libs/room-server');
+const roomServer = require('./libs/room-server');
+const path = require('path');
+
+//todo: createUserFromData - instantiate user object to pass to socket listener instead of userData
+const userData = {
+    roomCode: "",
+    host: true,
+    username: ""
+}
+
+app.use(express.static('public'));
 
 app.get('/', function (req, res) {
-    res.send("Get requests r 4 fannies")
-  })
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+});
 
 app.post('/', function (req, res) {
-    res.send(req.body)
-  })
+    res.send('no posterinos')
+});
 
-app.listen(4040, function () {
+const server = app.listen(4040, function () {
     console.log('Room app listening - get the party started on port 4040!');
 });
 
-// roomServer.listen(server);
+roomServer.listen(server, userData);
