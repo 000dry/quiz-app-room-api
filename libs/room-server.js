@@ -1,4 +1,5 @@
 var socketio = require('socket.io');
+var _ = require('lodash');
 var io;
 var guestNumber = {};
 var nicknames = {};
@@ -9,10 +10,9 @@ exports.listen = function(server, userData) {
     io = socketio.listen(server);
 
     io.sockets.on('connection', function(socket) {
-        if(!userData.roomCode && !userData.host || userData.roomCode && userData.host) {
+        if((!userData.roomCode && !userData.host) || (userData.roomCode && userData.host)) {
             throw new Error('User connected with bad combination of roomCode and host status');
         }
-
         var room = userData.roomCode && !userData.host ? userData.roomCode : generateHostRoomCode();
         guestNumber[room] = 1;
         namesUsed[room] = namesUsed[room] ? namesUsed[room] : [];
@@ -25,7 +25,7 @@ exports.listen = function(server, userData) {
 };
 
 function generateHostRoomCode() {
-    var code = ''
+    var code = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     for ( var i = 0; i < 4; i++ ) {
         code += characters.charAt(Math.floor(Math.random() * characters.length));
@@ -42,17 +42,14 @@ function assignName(socket, guestNumber, nicknames, namesUsed, room, username) {
         name: name
     });
 
-    var usersInRoom = namesUsed[room]
-    var usernamesInRoom = []
-
-    for (var index in usersInRoom) {
-        var userSocketId = usersInRoom[index].id;
-        usernamesInRoom.push(nicknames[room][userSocketId]);
-    }
-    socket.broadcast.to(room).emit('usersJoined', {
-        users: usernamesInRoom
-    });
     namesUsed[room].push(name);
+
+    var usersInRoom = namesUsed[room]
+
+    io.to(room).emit('usersJoined', {
+        users: usersInRoom
+    });
+    
     return guestNumber + 1;
 }
 
@@ -111,5 +108,11 @@ function handleClientDisconnection(socket, nicknames, namesUsed, room) {
         var nameIndex = namesUsed[room].indexOf(nicknames[room][socket.id]);
         delete namesUsed[room][nameIndex];
         delete nicknames[room][socket.id];
+        if(_.isEmpty(namesUsed[room])) {
+            delete namesUsed[room];
+        }
+        if(_.isEmpty(nicknames[room])) {
+            delete nicknames[room];
+        }
     });
 }

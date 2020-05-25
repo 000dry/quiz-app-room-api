@@ -13,11 +13,11 @@ const userData = {
 app.use(express.static('public'));
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname + '/public/index.html'));
+    res.send("some duff data");
 });
 
 app.post('/', function (req, res) {
-    res.send('no posterinos')
+    res.send('no posterinos');
 });
 
 const server = app.listen(4040, function () {
