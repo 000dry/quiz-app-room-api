@@ -10,14 +10,14 @@ const userData = {
     username: ""
 }
 
-app.use(express.static('public'));
+app.use('/assets', express.static('public'));
 
 app.get('/', function (req, res) {
-    res.send("some duff data");
+    res.sendFile(path.join(__dirname + '/public/launcher.html'));
 });
 
 app.post('/', function (req, res) {
-    res.send('no posterinos');
+    res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 const server = app.listen(4040, function () {

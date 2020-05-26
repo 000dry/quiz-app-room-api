@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>Room Launcher</title>
+</head>
+<body>
+<div id='content'>
+<div id='room'></div>
+<div id='users'></div>
+<br>
+<br>
+<form id='send-form'>
+host:
+<select id="host" name="host">
+    <option value="true">true</option>
+    <option value="false">false</option>
+</select>
+<br>
+<br>
+<p>If host = true, do not enter code</p>
+    code:
+<input id='code' />
+<br>
+<br>
+<p>If host = false, do not enter username</p>
+    username:
+<input id='username' />
+<br>
+<br>
+<input id='send-button' type='button' value='Send'/>
+<div id='help'>
+</ul>
+</div>
+</form>
+</div>
+<script src='http://code.jquery.com/jquery-1.8.0.min.js' type='text/javascript'></script>
+<script src='/assets/launcher.js' type='text/javascript'></script>
+</body>
+</html>
